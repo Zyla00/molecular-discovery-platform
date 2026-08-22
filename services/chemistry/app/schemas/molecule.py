@@ -22,3 +22,13 @@ class MoleculeDescriptorsResponse(BaseModel):
     input_smiles: str
     canonical_smiles: str
     descriptors: MolecularDescriptors
+
+class MoleculeSimilarityInput(BaseModel):
+    smiles_a: str = Field(..., min_length=1)
+    smiles_b: str = Field(..., min_length=1)
+
+
+class MoleculeSimilarityResponse(BaseModel):
+    canonical_smiles_a: str
+    canonical_smiles_b: str
+    similarity: float
