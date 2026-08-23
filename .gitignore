@@ -12,4 +12,5 @@ htmlcov/
 .DS_Store
 Thumbs.db
 *.joblib
+!services/prediction/models/solubility.joblib
 *.pkl
