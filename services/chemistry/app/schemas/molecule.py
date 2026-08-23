@@ -32,3 +32,30 @@ class MoleculeSimilarityResponse(BaseModel):
     canonical_smiles_a: str
     canonical_smiles_b: str
     similarity: float
+
+class ChemicalSpaceSearchInput(BaseModel):
+    smiles: str = Field(
+        ...,
+        min_length=1,
+    )
+
+    top_k: int = Field(
+        default=5,
+        ge=1,
+        le=20,
+    )
+
+    exclude_exact_match: bool = True
+
+
+class SimilarCompound(BaseModel):
+    compound_id: str
+    smiles: str
+    similarity: float
+    measured_log_s: float
+
+
+class ChemicalSpaceSearchResponse(BaseModel):
+    query_smiles: str
+    results_count: int
+    results: list[SimilarCompound]

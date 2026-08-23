@@ -2,10 +2,12 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.molecule import (
     MoleculeDescriptorsResponse,
-    MoleculeInput, MoleculeSimilarityInput, MoleculeSimilarityResponse,
+    MoleculeInput, MoleculeSimilarityInput, MoleculeSimilarityResponse, ChemicalSpaceSearchInput,
+    ChemicalSpaceSearchResponse,
 )
 from app.services.descriptors import calculate_descriptors
 from app.services.similarity import calculate_similarity
+from app.services.chemical_space import chemical_space_index
 
 router = APIRouter(
     prefix="/api/v1/molecules",
@@ -60,4 +62,33 @@ def get_molecular_similarity(
         canonical_smiles_a=canonical_a,
         canonical_smiles_b=canonical_b,
         similarity=similarity,
+    )
+
+@router.post(
+    "/similarity-search",
+    response_model=ChemicalSpaceSearchResponse,
+)
+def search_chemical_space(
+    request: ChemicalSpaceSearchInput,
+) -> ChemicalSpaceSearchResponse:
+
+    try:
+        canonical_smiles, results = (
+            chemical_space_index.search(
+                smiles=request.smiles,
+                top_k=request.top_k,
+                exclude_exact_match=request.exclude_exact_match,
+            )
+        )
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
+
+    return ChemicalSpaceSearchResponse(
+        query_smiles=canonical_smiles,
+        results_count=len(results),
+        results=results,
     )
