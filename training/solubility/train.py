@@ -26,9 +26,14 @@ FEATURE_NAMES = [
 ]
 
 BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parents[1]
 
-DATA_PATH = BASE_DIR / "data" / "delaney.csv"
-
+DATA_PATH = (
+    ROOT_DIR
+    / "data"
+    / "compound_library"
+    / "delaney.csv"
+)
 MODEL_DIR = (
     BASE_DIR.parent.parent
     / "services"

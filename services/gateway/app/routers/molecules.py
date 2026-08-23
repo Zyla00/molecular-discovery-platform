@@ -7,6 +7,8 @@ from app.clients.chemistry import chemistry_client
 from app.schemas.molecule import (
     MoleculeInput,
     SimilarityInput,
+    SimilaritySearchInput,
+
 )
 
 
@@ -90,4 +92,27 @@ async def analyze_molecule(molecule: MoleculeInput):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Downstream service unavailable",
+        ) from exc
+
+@router.post("/similarity-search")
+async def similarity_search(
+    request: SimilaritySearchInput,
+):
+    try:
+        return await chemistry_client.search_similar_compounds(
+            smiles=request.smiles,
+            top_k=request.top_k,
+            exclude_exact_match=request.exclude_exact_match,
+        )
+
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail="Chemistry service rejected the request",
+        ) from exc
+
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Chemistry service unavailable",
         ) from exc

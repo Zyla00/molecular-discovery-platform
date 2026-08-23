@@ -49,5 +49,28 @@ class ChemistryClient:
 
             return response.json()
 
+    async def search_similar_compounds(
+            self,
+            smiles: str,
+            top_k: int,
+            exclude_exact_match: bool,
+    ) -> dict:
+        async with httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=10.0,
+        ) as client:
+            response = await client.post(
+                "/api/v1/molecules/similarity-search",
+                json={
+                    "smiles": smiles,
+                    "top_k": top_k,
+                    "exclude_exact_match": exclude_exact_match,
+                },
+            )
+
+            response.raise_for_status()
+
+            return response.json()
 
 chemistry_client = ChemistryClient()
+

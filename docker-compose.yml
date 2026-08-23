@@ -33,7 +33,8 @@ services:
 
   chemistry:
     build:
-      context: ./services/chemistry
+      context: .
+      dockerfile: services/chemistry/Dockerfile
 
     container_name: mdp-chemistry
 
