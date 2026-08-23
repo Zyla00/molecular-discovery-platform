@@ -8,9 +8,9 @@ from app.schemas.molecule import (
     MoleculeInput,
     SimilarityInput,
     SimilaritySearchInput,
+    ChemicalSpaceInput,
 
 )
-
 
 router = APIRouter(
     prefix="/api/v1/molecules",
@@ -103,6 +103,28 @@ async def similarity_search(
             smiles=request.smiles,
             top_k=request.top_k,
             exclude_exact_match=request.exclude_exact_match,
+        )
+
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail="Chemistry service rejected the request",
+        ) from exc
+
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Chemistry service unavailable",
+        ) from exc
+
+@router.post("/chemical-space")
+async def chemical_space(
+    request: ChemicalSpaceInput,
+):
+    try:
+        return await chemistry_client.get_chemical_space(
+            smiles=request.smiles,
+            top_k=request.top_k,
         )
 
     except httpx.HTTPStatusError as exc:

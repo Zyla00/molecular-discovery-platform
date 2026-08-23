@@ -3,8 +3,11 @@ from fastapi import APIRouter, HTTPException, status
 from app.schemas.molecule import (
     MoleculeDescriptorsResponse,
     MoleculeInput, MoleculeSimilarityInput, MoleculeSimilarityResponse, ChemicalSpaceSearchInput,
-    ChemicalSpaceSearchResponse,
+    ChemicalSpaceSearchResponse, ChemicalSpaceVisualizationInput,
+    ChemicalSpaceVisualizationResponse,
 )
+
+from app.services.chemical_space_projection import chemical_space_projector
 from app.services.descriptors import calculate_descriptors
 from app.services.similarity import calculate_similarity
 from app.services.chemical_space import chemical_space_index
@@ -91,4 +94,28 @@ def search_chemical_space(
         query_smiles=canonical_smiles,
         results_count=len(results),
         results=results,
+    )
+
+@router.post(
+    "/chemical-space",
+    response_model=ChemicalSpaceVisualizationResponse,
+)
+def visualize_chemical_space(
+    request: ChemicalSpaceVisualizationInput,
+) -> ChemicalSpaceVisualizationResponse:
+
+    try:
+        result = chemical_space_projector.build_visualization(
+            smiles=request.smiles,
+            top_k=request.top_k,
+        )
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
+
+    return ChemicalSpaceVisualizationResponse(
+        **result
     )

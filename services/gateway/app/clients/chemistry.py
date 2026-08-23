@@ -72,5 +72,26 @@ class ChemistryClient:
 
             return response.json()
 
+    async def get_chemical_space(
+            self,
+            smiles: str,
+            top_k: int,
+    ) -> dict:
+        async with httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=20.0,
+        ) as client:
+            response = await client.post(
+                "/api/v1/molecules/chemical-space",
+                json={
+                    "smiles": smiles,
+                    "top_k": top_k,
+                },
+            )
+
+            response.raise_for_status()
+
+            return response.json()
+
 chemistry_client = ChemistryClient()
 

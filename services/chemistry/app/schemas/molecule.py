@@ -59,3 +59,37 @@ class ChemicalSpaceSearchResponse(BaseModel):
     query_smiles: str
     results_count: int
     results: list[SimilarCompound]
+
+class ChemicalSpaceVisualizationInput(BaseModel):
+    smiles: str = Field(
+        ...,
+        min_length=1,
+    )
+
+    top_k: int = Field(
+        default=5,
+        ge=1,
+        le=20,
+    )
+
+
+class ChemicalSpacePoint(BaseModel):
+    compound_id: str
+    smiles: str
+    x: float
+    y: float
+    similarity: float | None = None
+    is_neighbor: bool = False
+
+
+class QueryPoint(BaseModel):
+    smiles: str
+    x: float
+    y: float
+
+
+class ChemicalSpaceVisualizationResponse(BaseModel):
+    method: str
+    explained_variance: list[float]
+    query: QueryPoint
+    points: list[ChemicalSpacePoint]
