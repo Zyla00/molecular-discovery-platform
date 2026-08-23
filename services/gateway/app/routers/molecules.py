@@ -1,6 +1,7 @@
 import httpx
 
 from fastapi import APIRouter, HTTPException, status
+from app.clients.prediction import prediction_client
 
 from app.clients.chemistry import chemistry_client
 from app.schemas.molecule import (
@@ -53,4 +54,40 @@ async def calculate_similarity(molecules: SimilarityInput):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Chemistry service unavailable",
+        ) from exc
+
+@router.post("/analyze")
+async def analyze_molecule(molecule: MoleculeInput):
+    try:
+        chemistry_result = await chemistry_client.get_descriptors(
+            molecule.smiles
+        )
+
+        descriptors = chemistry_result["descriptors"]
+
+        prediction_result = await prediction_client.predict_solubility(
+            descriptors
+        )
+
+        return {
+            "molecule": {
+                "input_smiles": chemistry_result["input_smiles"],
+                "canonical_smiles": chemistry_result["canonical_smiles"],
+            },
+            "descriptors": descriptors,
+            "predictions": {
+                "solubility": prediction_result,
+            },
+        }
+
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail="Downstream service rejected the request",
+        ) from exc
+
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Downstream service unavailable",
         ) from exc

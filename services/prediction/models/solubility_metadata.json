@@ -1,0 +1,23 @@
+{
+  "model_type": "XGBRegressor",
+  "target": "logS",
+  "features": [
+    "molecular_weight",
+    "logp",
+    "tpsa",
+    "h_bond_donors",
+    "h_bond_acceptors",
+    "rotatable_bonds"
+  ],
+  "metrics": {
+    "mae": 0.48838933292285064,
+    "rmse": 0.6523768353904089,
+    "r2": 0.9022640077428145,
+    "baseline": {
+      "mae": 0.6956200873362447,
+      "rmse": 0.9076575422337432,
+      "r2": 0.8108085504724312
+    }
+  },
+  "random_state": 42
+}
