@@ -10,9 +10,12 @@ services:
 
     environment:
       CHEMISTRY_SERVICE_URL: http://chemistry:8000
+      PREDICTION_SERVICE_URL: http://prediction:8000
 
     depends_on:
       chemistry:
+        condition: service_healthy
+      prediction:
         condition: service_healthy
 
     healthcheck:
@@ -36,6 +39,28 @@ services:
 
     ports:
       - "8001:8000"
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+  prediction:
+    build:
+      context: ./services/prediction
+
+    container_name: mdp-prediction
+
+    ports:
+      - "8002:8000"
 
     healthcheck:
       test:

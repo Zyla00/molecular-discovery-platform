@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.routers.predictions import router as predictions_router
 
 
 app = FastAPI(
@@ -13,3 +14,5 @@ def health_check():
         "status": "ok",
         "service": "prediction",
     }
+
+app.include_router(predictions_router)
