@@ -1,0 +1,17 @@
+.venv-moldiscovery/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.idea/
+.env
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db
+*.joblib
+!services/prediction/models/solubility.joblib
+*.pkl
+training\solubility\data
