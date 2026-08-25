@@ -66,7 +66,11 @@ Currently supported descriptors: | Descriptor | Description | |---|---| | **Mole
 
 #### Example Request
 
-```json { "smiles": "CCO" } ``` #### Example Response ```json { "input_smiles": "CCO", "canonical_smiles": "CCO", "descriptors": { "molecular_weight": 46.069, "logp": -0.001, "tpsa": 20.23, "h_bond_donors": 1, "h_bond_acceptors": 1, "rotatable_bonds": 0 } } ```
+```json { "smiles": "CCO" } ``` 
+
+#### Example Response 
+
+```json { "input_smiles": "CCO", "canonical_smiles": "CCO", "descriptors": { "molecular_weight": 46.069, "logp": -0.001, "tpsa": 20.23, "h_bond_donors": 1, "h_bond_acceptors": 1, "rotatable_bonds": 0 } } ```
 
 ### Molecular similarity
 
@@ -84,6 +88,7 @@ The current compound library is based on the Delaney ESOL dataset.
 
 #### Search workflow:
 
+```text
 Query SMILES
      ↓
 Morgan fingerprint
@@ -95,30 +100,33 @@ Bulk Tanimoto similarity
 Rank compounds
      ↓
 Top-K nearest neighbours
+```
 
 #### Example request:
 
+```json
 {
   "smiles": "CC(=O)OC1=CC=CC=C1C(=O)O",
   "top_k": 5,
   "exclude_exact_match": true
 }
+```
 
 ### Returned results include:
 
-compound identifier,
-canonical SMILES,
-Tanimoto similarity,
-experimentally measured logS.
-Chemical space visualization
+- compound identifier,
+- canonical SMILES,
+- Tanimoto similarity,
+- experimentally measured logS.
+- Chemical space visualization
 
-Morgan fingerprints are projected from their original high-dimensional representation into a two-dimensional space using Principal Component Analysis (PCA).
+The `exclude_exact_match` option allows the query molecule itself to be omitted from the returned nearest neighbours.
 
 #### The visualization contains:
 
-the molecular compound library,
-the query molecule,
-Top-K nearest neighbours determined independently using Tanimoto similarity.
+- the molecular compound library,
+- the query molecule,
+- Top-K nearest neighbours determined independently using Tanimoto similarity.
 
 #### Important distinction:
 
@@ -137,19 +145,15 @@ The model is trained on the Delaney ESOL dataset.
 
 The prediction model currently uses six RDKit descriptors:
 
-Molecular Weight
-LogP
-TPSA
-Hydrogen Bond Donors
-Hydrogen Bond Acceptors
-Rotatable Bonds
+| Feature | |---| | Molecular Weight | | LogP | | TPSA | | Hydrogen Bond Donors | | Hydrogen Bond Acceptors | | Rotatable Bonds |
 
 #### Model:
 
-XGBRegressor
+`XGBRegressor`
 
 #### Pipeline:
 
+```text
 SMILES
   ↓
 Chemistry Service
@@ -161,29 +165,26 @@ Prediction Service
 XGBoost
   ↓
 Predicted logS
+```
 
 ### Model Performance
 
 Current evaluation uses a reproducible 80/20 random train-test split with:
 
+```python
 random_state = 42
+```
 
-Dataset size:
+#### Dataset size:
 
-1144 molecules
-
-Training set:
-
-915 molecules
+| Dataset | Number of Molecules | |---|---:| | Full dataset | 1,144 | | Training set | 915 | | Test set | 229 |
 
 #### Test set:
 
 229 molecules
 
 ### Results
-Model	MAE	RMSE	R²
-XGBoost	0.4884	0.6524	0.9023
-ESOL baseline	0.6956	0.9077	0.8108
+| Model | MAE ↓ | RMSE ↓ | R² ↑ | |---|---:|---:|---:| | **XGBoost** | **0.4884** | **0.6524** | **0.9023** | | ESOL baseline | 0.6956 | 0.9077 | 0.8108 |
 
 The current XGBoost model outperforms the dataset-provided ESOL baseline on the held-out random test split.
 
@@ -198,3 +199,7 @@ A scaffold-based split is therefore planned as a more chemically meaningful eval
 ## Project Goal
 
 The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
+
+## Repository Structure 
+
+```text molecular-discovery-platform/ │ ├── data/ │ └── compound_library/ │ └── delaney.csv │ ├── frontend/ │ ├── app.py │ ├── api_client.py │ ├── Dockerfile │ └── requirements.txt │ ├── services/ │ │ │ ├── gateway/ │ │ ├── app/ │ │ │ ├── clients/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ └── main.py │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ ├── chemistry/ │ │ ├── app/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ ├── services/ │ │ │ └── main.py │ │ ├── tests/ │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ └── prediction/ │ ├── app/ │ │ ├── routers/ │ │ ├── schemas/ │ │ ├── services/ │ │ └── main.py │ ├── models/ │ │ ├── solubility.joblib │ │ └── solubility_metadata.json │ ├── tests/ │ ├── Dockerfile │ └── requirements.txt │ ├── training/ │ └── solubility/ │ └── train.py │ ├── docker-compose.yml ├── .gitignore └── README.md ```
