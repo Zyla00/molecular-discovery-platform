@@ -167,25 +167,6 @@ XGBoost
 Predicted logS
 ```
 
-### Model Performance
-
-Current evaluation uses a reproducible 80/20 random train-test split with:
-
-```python
-random_state = 42
-```
-
-#### Dataset size:
-
-| Dataset | Number of Molecules | |---|---:| | Full dataset | 1,144 | | Training set | 915 | | Test set | 229 |
-
-#### Test set:
-
-229 molecules
-
-### Results
-| Model | MAE ↓ | RMSE ↓ | R² ↑ | |---|---:|---:|---:| | **XGBoost** | **0.4884** | **0.6524** | **0.9023** | | ESOL baseline | 0.6956 | 0.9077 | 0.8108 |
-
 The current XGBoost model outperforms the dataset-provided ESOL baseline on the held-out random test split.
 
 ### Evaluation limitation
