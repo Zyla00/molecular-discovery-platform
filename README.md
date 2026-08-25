@@ -200,6 +200,3 @@ A scaffold-based split is therefore planned as a more chemically meaningful eval
 
 The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
 
-## Repository Structure 
-
-```text molecular-discovery-platform/ │ ├── data/ │ └── compound_library/ │ └── delaney.csv │ ├── frontend/ │ ├── app.py │ ├── api_client.py │ ├── Dockerfile │ └── requirements.txt │ ├── services/ │ │ │ ├── gateway/ │ │ ├── app/ │ │ │ ├── clients/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ └── main.py │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ ├── chemistry/ │ │ ├── app/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ ├── services/ │ │ │ └── main.py │ │ ├── tests/ │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ └── prediction/ │ ├── app/ │ │ ├── routers/ │ │ ├── schemas/ │ │ ├── services/ │ │ └── main.py │ ├── models/ │ │ ├── solubility.joblib │ │ └── solubility_metadata.json │ ├── tests/ │ ├── Dockerfile │ └── requirements.txt │ ├── training/ │ └── solubility/ │ └── train.py │ ├── docker-compose.yml ├── .gitignore └── README.md ```
