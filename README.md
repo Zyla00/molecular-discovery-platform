@@ -1,39 +1,61 @@
 # Molecular Discovery Platform
 
-A containerized, microservice-based cheminformatics and machine learning platform for molecular exploration and early-stage drug discovery workflows.
+A containerized, microservice-based platform for **cheminformatics, molecular exploration, and early-stage drug discovery workflows**. The platform combines **RDKit-based molecular analysis**, **chemical similarity search**, **chemical space visualization**, and **machine learning-based solubility prediction** behind a unified API Gateway and an interactive Streamlit dashboard. >
 
-The platform combines RDKit-based molecular analysis, chemical similarity search, chemical space visualization, and machine learning-based solubility prediction behind a unified API Gateway and an interactive Streamlit dashboard.
-
-Status: MVP / actively developed
+**Status:** MVP / actively developed
 
 ## Demo
 
 
 
-The Streamlit dashboard provides a single interface for:
-
-molecule analysis,
-molecular descriptor inspection,
-solubility prediction,
-similarity search,
-nearest-neighbour exploration,
-PCA-based chemical space visualization.
+The Streamlit dashboard provides a single interface for: 
+- molecular analysis,
+- molecular descriptor inspection,
+- aqueous solubility prediction,
+- structural similarity search,
+- nearest-neighbour exploration,
+- PCA-based chemical space visualization.
 
 ## Overview
 
-The goal of this project is to build an extensible molecular discovery platform that connects cheminformatics, machine learning, and production-oriented software engineering.
+The goal of this project is to build an extensible molecular discovery platform that connects **cheminformatics**, **machine learning**, and **production-oriented software engineering**.
 
-A user provides a molecule represented as a SMILES string, and the platform can currently:
+A user provides a molecule represented as a **SMILES** string, and the platform can currently:
 
-calculate molecular descriptors,
-canonicalize SMILES,
-compare two molecular structures,
-search for structurally similar compounds,
-explore a molecular chemical space,
-predict aqueous solubility using a trained ML model,
-visualize results through an interactive web dashboard.
+- calculate molecular descriptors,
+- canonicalize SMILES,
+- compare two molecular structures,
+- search for structurally similar compounds,
+- explore a molecular chemical space,
+- predict aqueous solubility using a trained ML model,
+- visualize results through an interactive web dashboard.
 
-The system is designed as a set of independent containerized services communicating through REST APIs.
+The system is designed as a set of **independent containerized services communicating through REST APIs**.
+
+## Architecture
+
+The application follows a microservice-based architecture in which individual components are responsible for separate parts of the molecular analysis workflow.
+
+```mermaid
+flowchart LR
+    A[Streamlit Dashboard] --> B[API Gateway]
+
+    B --> C[Chemistry Service]
+    B --> D[Prediction Service]
+
+    C --> E[RDKit]
+    C --> F[Molecular Library]
+
+    D --> G[XGBoost Model]
+
+    E --> H[Molecular Descriptors]
+    E --> I[Morgan Fingerprints]
+
+    I --> J[Similarity Search]
+    I --> K[PCA Visualization]
+```
+
+The API Gateway provides a unified interface while the underlying services remain modular and independently maintainable.
 
 ## Current Features
 ### Molecular descriptors
@@ -42,12 +64,12 @@ The Chemistry Service uses RDKit to calculate molecular properties from SMILES.
 
 Currently supported descriptors:
 
-Molecular Weight
-LogP
-TPSA
-Hydrogen Bond Donors
-Hydrogen Bond Acceptors
-Rotatable Bonds
+- Molecular Weight
+- LogP
+- TPSA
+- Hydrogen Bond Donors
+- Hydrogen Bond Acceptors
+- Rotatable Bonds
 
 Example:
 
