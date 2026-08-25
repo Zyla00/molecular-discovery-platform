@@ -64,6 +64,35 @@ flowchart LR
 
 The API Gateway provides a unified interface while the underlying services remain modular and independently maintainable.
 
+## Technology Stack
+
+| Area | Technologies |
+|---|---|
+| **Backend** | FastAPI, Pydantic, HTTPX |
+| **Cheminformatics** | RDKit, Morgan fingerprints, Tanimoto similarity |
+| **Machine Learning** | XGBoost, Scikit-learn |
+| **Data Processing** | Pandas, NumPy |
+| **Visualization** | Streamlit, Plotly, PCA |
+| **Infrastructure** | Docker, Docker Compose |
+| **Testing** | pytest |
+| **Dataset** | Delaney ESOL |
+
+The platform combines cheminformatics, machine learning, and containerized microservices in a single molecular analysis workflow.
+
+## API Endpoints
+
+The API Gateway provides a unified interface for the main platform functionality.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Check API health |
+| `POST` | `/api/v1/molecules/descriptors` | Calculate molecular descriptors |
+| `POST` | `/api/v1/molecules/similarity` | Compare two molecular structures |
+| `POST` | `/api/v1/molecules/similarity-search` | Find structurally similar compounds |
+| `POST` | `/api/v1/molecules/chemical-space` | Generate PCA chemical-space projection |
+| `POST` | `/api/v1/molecules/analyze` | Run complete molecular analysis |
+
+
 ## Current Features
 ### Molecular descriptors
 
