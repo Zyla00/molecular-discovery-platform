@@ -1,6 +1,6 @@
 # Molecular Discovery Platform
 
-A containerized, microservice-based platform for **cheminformatics, molecular exploration, and early-stage drug discovery workflows**. The platform combines **RDKit-based molecular analysis**, **chemical similarity search**, **chemical space visualization**, and **machine learning-based solubility prediction** behind a unified API Gateway and an interactive Streamlit dashboard. >
+< A containerized, microservice-based platform for **cheminformatics, molecular exploration, and early-stage drug discovery workflows**. The platform combines **RDKit-based molecular analysis**, **chemical similarity search**, **chemical space visualization**, and **machine learning-based solubility prediction** behind a unified API Gateway and an interactive Streamlit dashboard. >
 
 **Status:** MVP / actively developed
 
