@@ -6,6 +6,13 @@ A containerized, microservice-based platform for **cheminformatics, molecular ex
 
 ## Demo
 
+<img width="906" height="283" alt="image" src="https://github.com/user-attachments/assets/b60f7969-bcc6-4893-922c-27c7414f14df" />
+
+<img width="830" height="394" alt="image" src="https://github.com/user-attachments/assets/8f4b0caa-8330-440b-b95b-1027a6fa7879" />
+
+<img width="861" height="218" alt="image" src="https://github.com/user-attachments/assets/6c2d3cc4-36fa-4c1e-919b-905d44a289da" />
+
+<img width="896" height="444" alt="image" src="https://github.com/user-attachments/assets/f33fbc85-f4b1-472f-8bdb-4ee11fabebd9" />
 
 
 The Streamlit dashboard provides a single interface for: 
