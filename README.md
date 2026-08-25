@@ -62,57 +62,19 @@ The API Gateway provides a unified interface while the underlying services remai
 
 The Chemistry Service uses RDKit to calculate molecular properties from SMILES.
 
-Currently supported descriptors:
+Currently supported descriptors: | Descriptor | Description | |---|---| | **Molecular Weight** | Molecular mass of the compound | | **LogP** | Estimated lipophilicity | | **TPSA** | Topological polar surface area | | **Hydrogen Bond Donors** | Number of hydrogen bond donor groups | | **Hydrogen Bond Acceptors** | Number of hydrogen bond acceptor groups | | **Rotatable Bonds** | Number of rotatable bonds | 
 
-- Molecular Weight
-- LogP
-- TPSA
-- Hydrogen Bond Donors
-- Hydrogen Bond Acceptors
-- Rotatable Bonds
+#### Example Request
 
-Example:
-
-{
-  "smiles": "CCO"
-}
-
-Response:
-
-{
-  "input_smiles": "CCO",
-  "canonical_smiles": "CCO",
-  "descriptors": {
-    "molecular_weight": 46.069,
-    "logp": -0.001,
-    "tpsa": 20.23,
-    "h_bond_donors": 1,
-    "h_bond_acceptors": 1,
-    "rotatable_bonds": 0
-  }
-}
+```json { "smiles": "CCO" } ``` #### Example Response ```json { "input_smiles": "CCO", "canonical_smiles": "CCO", "descriptors": { "molecular_weight": 46.069, "logp": -0.001, "tpsa": 20.23, "h_bond_donors": 1, "h_bond_acceptors": 1, "rotatable_bonds": 0 } } ```
 
 ### Molecular similarity
 
-Molecular structures are represented using Morgan fingerprints generated with RDKit.
+Molecular structures are represented using **Morgan fingerprints** generated with RDKit. Pairwise similarity is calculated using the **Tanimoto coefficient**. #### Pipeline
 
-Pairwise similarity is calculated using the Tanimoto coefficient.
+```text SMILES │ ▼ RDKit Molecule │ ▼ Morgan Fingerprint │ ▼ Tanimoto Similarity │ ▼ Similarity Score ```
 
-Pipeline:
-
-SMILES
-  ↓
-RDKit molecule
-  ↓
-Morgan fingerprint
-  ↓
-Tanimoto similarity
-  ↓
-Similarity score
-
-Identical molecular structures produce a similarity score of:
-
-1.0
+Similarity scores range from `0.0` to `1.0`, where higher values indicate greater fingerprint similarity. Identical molecular fingerprints produce a similarity score of `1.0`.
 
 ### Chemical similarity search
 
