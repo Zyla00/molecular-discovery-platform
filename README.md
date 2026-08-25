@@ -77,7 +77,6 @@ The API Gateway provides a unified interface while the underlying services remai
 | **Testing** | pytest |
 | **Dataset** | Delaney ESOL |
 
-The platform combines cheminformatics, machine learning, and containerized microservices in a single molecular analysis workflow.
 
 ## API Endpoints
 
