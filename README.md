@@ -212,7 +212,7 @@ A scaffold-based split is therefore planned as a more chemically meaningful eval
 
 The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
 
-## 🚀 Running the Platform
+## Running the Platform
 
 The entire platform is containerized and can be started locally using **Docker Compose**. No separate Python environment or manual dependency installation is required.
 
