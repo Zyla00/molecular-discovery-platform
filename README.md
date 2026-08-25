@@ -35,6 +35,181 @@ visualize results through an interactive web dashboard.
 
 The system is designed as a set of independent containerized services communicating through REST APIs.
 
+## Current Features
+### Molecular descriptors
+
+The Chemistry Service uses RDKit to calculate molecular properties from SMILES.
+
+Currently supported descriptors:
+
+Molecular Weight
+LogP
+TPSA
+Hydrogen Bond Donors
+Hydrogen Bond Acceptors
+Rotatable Bonds
+
+Example:
+
+{
+  "smiles": "CCO"
+}
+
+Response:
+
+{
+  "input_smiles": "CCO",
+  "canonical_smiles": "CCO",
+  "descriptors": {
+    "molecular_weight": 46.069,
+    "logp": -0.001,
+    "tpsa": 20.23,
+    "h_bond_donors": 1,
+    "h_bond_acceptors": 1,
+    "rotatable_bonds": 0
+  }
+}
+
+### Molecular similarity
+
+Molecular structures are represented using Morgan fingerprints generated with RDKit.
+
+Pairwise similarity is calculated using the Tanimoto coefficient.
+
+Pipeline:
+
+SMILES
+  ↓
+RDKit molecule
+  ↓
+Morgan fingerprint
+  ↓
+Tanimoto similarity
+  ↓
+Similarity score
+
+Identical molecular structures produce a similarity score of:
+
+1.0
+
+### Chemical similarity search
+
+The platform can search a molecular library and return the most structurally similar compounds to a query molecule.
+
+The current compound library is based on the Delaney ESOL dataset.
+
+#### Search workflow:
+
+Query SMILES
+     ↓
+Morgan fingerprint
+     ↓
+Compare against molecular library
+     ↓
+Bulk Tanimoto similarity
+     ↓
+Rank compounds
+     ↓
+Top-K nearest neighbours
+
+#### Example request:
+
+{
+  "smiles": "CC(=O)OC1=CC=CC=C1C(=O)O",
+  "top_k": 5,
+  "exclude_exact_match": true
+}
+
+### Returned results include:
+
+compound identifier,
+canonical SMILES,
+Tanimoto similarity,
+experimentally measured logS.
+Chemical space visualization
+
+Morgan fingerprints are projected from their original high-dimensional representation into a two-dimensional space using Principal Component Analysis (PCA).
+
+#### The visualization contains:
+
+the molecular compound library,
+the query molecule,
+Top-K nearest neighbours determined independently using Tanimoto similarity.
+
+#### Important distinction:
+
+PCA coordinates are used only for visualization.
+Nearest-neighbour ranking is calculated using Morgan fingerprints and Tanimoto similarity.
+
+Therefore, geometric distance in the PCA projection should not be interpreted directly as Tanimoto similarity.
+
+### Solubility prediction
+
+The current machine learning model predicts aqueous solubility expressed as logS.
+
+The model is trained on the Delaney ESOL dataset.
+
+### Input features
+
+The prediction model currently uses six RDKit descriptors:
+
+Molecular Weight
+LogP
+TPSA
+Hydrogen Bond Donors
+Hydrogen Bond Acceptors
+Rotatable Bonds
+
+#### Model:
+
+XGBRegressor
+
+#### Pipeline:
+
+SMILES
+  ↓
+Chemistry Service
+  ↓
+RDKit descriptors
+  ↓
+Prediction Service
+  ↓
+XGBoost
+  ↓
+Predicted logS
+
+### Model Performance
+
+Current evaluation uses a reproducible 80/20 random train-test split with:
+
+random_state = 42
+
+Dataset size:
+
+1144 molecules
+
+Training set:
+
+915 molecules
+
+#### Test set:
+
+229 molecules
+
+### Results
+Model	MAE	RMSE	R²
+XGBoost	0.4884	0.6524	0.9023
+ESOL baseline	0.6956	0.9077	0.8108
+
+The current XGBoost model outperforms the dataset-provided ESOL baseline on the held-out random test split.
+
+### Evaluation limitation
+
+The current result should not be interpreted as evidence of equivalent performance on previously unseen molecular scaffolds.
+
+Random molecular splits can place structurally related compounds in both training and test sets.
+
+A scaffold-based split is therefore planned as a more chemically meaningful evaluation of model generalization.
 
 ## Project Goal
 
