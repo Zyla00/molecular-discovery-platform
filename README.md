@@ -81,11 +81,7 @@ Currently supported descriptors: | Descriptor | Description | |---|---| | **Mole
 
 ### Molecular similarity
 
-Molecular structures are represented using **Morgan fingerprints** generated with RDKit. Pairwise similarity is calculated using the **Tanimoto coefficient**. #### Pipeline
-
-```text SMILES │ ▼ RDKit Molecule │ ▼ Morgan Fingerprint │ ▼ Tanimoto Similarity │ ▼ Similarity Score ```
-
-Similarity scores range from `0.0` to `1.0`, where higher values indicate greater fingerprint similarity. Identical molecular fingerprints produce a similarity score of `1.0`.
+Molecular structures are represented using **Morgan fingerprints** generated with RDKit. Pairwise similarity is calculated using the **Tanimoto coefficient**. 
 
 ### Chemical similarity search
 
