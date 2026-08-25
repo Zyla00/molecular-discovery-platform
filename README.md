@@ -34,3 +34,8 @@ predict aqueous solubility using a trained ML model,
 visualize results through an interactive web dashboard.
 
 The system is designed as a set of independent containerized services communicating through REST APIs.
+
+
+## Project Goal
+
+The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
