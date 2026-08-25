@@ -200,6 +200,24 @@ A scaffold-based split is therefore planned as a more chemically meaningful eval
 
 The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
 
-## Repository Structure 
+## Roadmap
 
-```text molecular-discovery-platform/ │ ├── data/ │ └── compound_library/ │ └── delaney.csv │ ├── frontend/ │ ├── app.py │ ├── api_client.py │ ├── Dockerfile │ └── requirements.txt │ ├── services/ │ │ │ ├── gateway/ │ │ ├── app/ │ │ │ ├── clients/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ └── main.py │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ ├── chemistry/ │ │ ├── app/ │ │ │ ├── routers/ │ │ │ ├── schemas/ │ │ │ ├── services/ │ │ │ └── main.py │ │ ├── tests/ │ │ ├── Dockerfile │ │ └── requirements.txt │ │ │ └── prediction/ │ ├── app/ │ │ ├── routers/ │ │ ├── schemas/ │ │ ├── services/ │ │ └── main.py │ ├── models/ │ │ ├── solubility.joblib │ │ └── solubility_metadata.json │ ├── tests/ │ ├── Dockerfile │ └── requirements.txt │ ├── training/ │ └── solubility/ │ └── train.py │ ├── docker-compose.yml ├── .gitignore └── README.md ```
+Planned next steps focus on improving model validation, molecular analysis, and overall platform reliability.
+
+### Near-Term
+
+* [ ] Add RDKit 2D molecular structure rendering
+* [ ] Implement Bemis-Murcko scaffold splitting
+* [ ] Compare random split vs scaffold split
+* [ ] Add prediction uncertainty or applicability-domain estimation
+* [ ] Improve chemical-space visualization
+
+### Future Extensions
+
+* [ ] Add additional ADMET prediction tasks
+* [ ] Compare descriptor-based and fingerprint-based models
+* [ ] Add model versioning and experiment tracking
+* [ ] Explore bioactivity prediction using curated public datasets
+
+The roadmap prioritizes **scientific validation and model quality** before expanding the number of prediction tasks.
+
