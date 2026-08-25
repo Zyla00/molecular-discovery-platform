@@ -212,6 +212,41 @@ A scaffold-based split is therefore planned as a more chemically meaningful eval
 
 The long-term goal is to develop the project into an extensible experimentation and inference platform for computational drug discovery.
 
+## 🚀 Running the Platform
+
+The entire platform is containerized and can be started locally using **Docker Compose**. No separate Python environment or manual dependency installation is required.
+
+Clone the repository and navigate to the project directory:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/molecular-discovery-platform.git
+cd molecular-discovery-platform
+```
+Build and start all services:
+```bash
+docker compose up --build -d
+```
+Docker Compose will start the complete application stack, including the Streamlit frontend, API Gateway, Chemistry Service, and Prediction Service.
+
+Once the containers are running, the application is available at:
+
+| Service                          | URL                          |
+| -------------------------------- | ---------------------------- |
+| **Streamlit Dashboard**          | `http://localhost:8501`      |
+| **API Gateway / Swagger**        | `http://localhost:8000/docs` |
+| **Chemistry Service / Swagger**  | `http://localhost:8001/docs` |
+| **Prediction Service / Swagger** | `http://localhost:8002/docs` |
+
+You can verify the status of the running containers with:
+```bash
+docker compose ps
+```
+
+To stop the platform:
+```bash
+docker compose down
+```
+
 ## Roadmap
 
 Planned next steps focus on improving model validation, molecular analysis, and overall platform reliability.
