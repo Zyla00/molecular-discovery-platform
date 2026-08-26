@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import streamlit as st
+import streamlit.components.v1 as components
 
 from api_client import client
 
@@ -61,6 +62,8 @@ if analyze_button:
                 top_k,
             )
 
+            depiction = client.molecule_depiction(smiles)
+
     except requests.HTTPError as exc:
         st.error(
             f"API returned an error: {exc}"
@@ -73,55 +76,64 @@ if analyze_button:
         )
         st.stop()
 
-
     st.subheader("Molecule overview")
 
     molecule = analysis["molecule"]
     descriptors = analysis["descriptors"]
 
-    st.code(
-        molecule["canonical_smiles"],
-        language=None,
+    structure_col, info_col = st.columns(
+        [1, 2]
     )
 
+    with structure_col:
+        st.markdown("#### 2D structure")
 
+        components.html(
+            depiction["svg"],
+            height=320,
+        )
 
-    col1, col2, col3 = st.columns(3)
+    with info_col:
+        st.markdown("#### Canonical SMILES")
 
-    col1.metric(
-        "Molecular Weight",
-        f"{descriptors['molecular_weight']:.2f}",
-    )
+        st.code(
+            molecule["canonical_smiles"],
+            language=None,
+        )
 
-    col2.metric(
-        "LogP",
-        f"{descriptors['logp']:.2f}",
-    )
+        col1, col2, col3 = st.columns(3)
 
-    col3.metric(
-        "TPSA",
-        f"{descriptors['tpsa']:.2f}",
-    )
+        col1.metric(
+            "Molecular Weight",
+            f"{descriptors['molecular_weight']:.2f}",
+        )
 
+        col2.metric(
+            "LogP",
+            f"{descriptors['logp']:.2f}",
+        )
 
-    col4, col5, col6 = st.columns(3)
+        col3.metric(
+            "TPSA",
+            f"{descriptors['tpsa']:.2f}",
+        )
 
-    col4.metric(
-        "H-Bond Donors",
-        descriptors["h_bond_donors"],
-    )
+        col4, col5, col6 = st.columns(3)
 
-    col5.metric(
-        "H-Bond Acceptors",
-        descriptors["h_bond_acceptors"],
-    )
+        col4.metric(
+            "H-Bond Donors",
+            descriptors["h_bond_donors"],
+        )
 
-    col6.metric(
-        "Rotatable Bonds",
-        descriptors["rotatable_bonds"],
-    )
+        col5.metric(
+            "H-Bond Acceptors",
+            descriptors["h_bond_acceptors"],
+        )
 
-
+        col6.metric(
+            "Rotatable Bonds",
+            descriptors["rotatable_bonds"],
+        )
 
     st.subheader("ML predictions")
 

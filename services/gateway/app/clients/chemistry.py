@@ -93,5 +93,21 @@ class ChemistryClient:
 
             return response.json()
 
+    async def get_depiction(
+            self,
+            smiles: str,
+    ) -> dict:
+        async with httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=10.0,
+        ) as client:
+            response = await client.post(
+                "/api/v1/molecules/depiction",
+                json={"smiles": smiles},
+            )
+
+            response.raise_for_status()
+
+            return response.json()
 chemistry_client = ChemistryClient()
 
