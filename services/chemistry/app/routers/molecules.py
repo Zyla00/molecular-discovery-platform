@@ -7,6 +7,8 @@ from app.schemas.molecule import (
     ChemicalSpaceVisualizationResponse,
     MoleculeDepictionInput,
     MoleculeDepictionResponse,
+    DrugLikenessInput,
+    DrugLikenessResponse,
 )
 
 from app.services.chemical_space_projection import chemical_space_projector
@@ -14,6 +16,7 @@ from app.services.descriptors import calculate_descriptors
 from app.services.similarity import calculate_similarity
 from app.services.chemical_space import chemical_space_index
 from app.services.depiction import generate_molecule_svg
+from app.services.drug_likeness import calculate_drug_likeness
 
 router = APIRouter(
     prefix="/api/v1/molecules",
@@ -145,4 +148,26 @@ def depict_molecule(
     return MoleculeDepictionResponse(
         canonical_smiles=canonical_smiles,
         svg=svg,
+    )
+
+@router.post(
+    "/drug-likeness",
+    response_model=DrugLikenessResponse,
+)
+def get_drug_likeness(
+    request: DrugLikenessInput,
+) -> DrugLikenessResponse:
+    try:
+        result = calculate_drug_likeness(
+            request.smiles
+        )
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
+
+    return DrugLikenessResponse(
+        **result
     )

@@ -103,3 +103,26 @@ class MoleculeDepictionInput(BaseModel):
 class MoleculeDepictionResponse(BaseModel):
     canonical_smiles: str
     svg: str
+
+class DrugLikenessInput(BaseModel):
+    smiles: str = Field(
+        ...,
+        min_length=1,
+    )
+
+
+class LipinskiRuleResult(BaseModel):
+    value: float
+    threshold: str
+    passes: bool
+
+
+class LipinskiAssessment(BaseModel):
+    rules: dict[str, LipinskiRuleResult]
+    violations: int
+    passes_rule_of_five: bool
+
+
+class DrugLikenessResponse(BaseModel):
+    lipinski: LipinskiAssessment
+    qed: float

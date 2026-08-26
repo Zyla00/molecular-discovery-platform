@@ -13,7 +13,10 @@ class MolecularDiscoveryClient:
     def __init__(self) -> None:
         self.base_url = GATEWAY_URL
 
-    def analyze_molecule(self, smiles: str) -> dict:
+    def analyze_molecule(
+        self,
+        smiles: str,
+    ) -> dict:
         response = requests.post(
             f"{self.base_url}/api/v1/molecules/analyze",
             json={
@@ -64,17 +67,36 @@ class MolecularDiscoveryClient:
         return response.json()
 
     def molecule_depiction(
-            self,
-            smiles: str,
+        self,
+        smiles: str,
     ) -> dict:
         response = requests.post(
             f"{self.base_url}/api/v1/molecules/depiction",
-            json={"smiles": smiles},
+            json={
+                "smiles": smiles,
+            },
             timeout=20,
         )
 
         response.raise_for_status()
 
         return response.json()
+
+    def drug_likeness(
+        self,
+        smiles: str,
+    ) -> dict:
+        response = requests.post(
+            f"{self.base_url}/api/v1/molecules/drug-likeness",
+            json={
+                "smiles": smiles,
+            },
+            timeout=20,
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
 
 client = MolecularDiscoveryClient()
