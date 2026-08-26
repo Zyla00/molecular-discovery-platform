@@ -93,3 +93,13 @@ class ChemicalSpaceVisualizationResponse(BaseModel):
     explained_variance: list[float]
     query: QueryPoint
     points: list[ChemicalSpacePoint]
+
+class MoleculeDepictionInput(BaseModel):
+    smiles: str = Field(
+        ...,
+        min_length=1,
+    )
+
+class MoleculeDepictionResponse(BaseModel):
+    canonical_smiles: str
+    svg: str

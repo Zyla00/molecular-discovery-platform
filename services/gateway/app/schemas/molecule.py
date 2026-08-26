@@ -31,3 +31,6 @@ class ChemicalSpaceInput(BaseModel):
         ge=1,
         le=20,
     )
+
+class MoleculeDepictionInput(BaseModel):
+    smiles: str = Field(..., min_length=1)
