@@ -10,6 +10,7 @@ from app.schemas.molecule import (
     SimilaritySearchInput,
     ChemicalSpaceInput,
     MoleculeDepictionInput,
+    DrugLikenessInput,
 
 )
 
@@ -146,6 +147,27 @@ async def molecule_depiction(
 ):
     try:
         return await chemistry_client.get_depiction(
+            request.smiles
+        )
+
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail="Chemistry service rejected the request",
+        ) from exc
+
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Chemistry service unavailable",
+        ) from exc
+
+@router.post("/drug-likeness")
+async def drug_likeness(
+    request: DrugLikenessInput,
+):
+    try:
+        return await chemistry_client.get_drug_likeness(
             request.smiles
         )
 

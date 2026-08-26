@@ -38,17 +38,23 @@ top_k = st.slider(
     value=5,
 )
 
-
 analyze_button = st.button(
     "Analyze molecule",
     type="primary",
 )
 
-
 if analyze_button:
     try:
         with st.spinner("Analyzing molecule..."):
             analysis = client.analyze_molecule(
+                smiles
+            )
+
+            depiction = client.molecule_depiction(
+                smiles
+            )
+
+            drug_likeness = client.drug_likeness(
                 smiles
             )
 
@@ -62,8 +68,6 @@ if analyze_button:
                 top_k,
             )
 
-            depiction = client.molecule_depiction(smiles)
-
     except requests.HTTPError as exc:
         st.error(
             f"API returned an error: {exc}"
@@ -75,6 +79,7 @@ if analyze_button:
             f"Could not connect to API Gateway: {exc}"
         )
         st.stop()
+
 
     st.subheader("Molecule overview")
 
@@ -135,20 +140,67 @@ if analyze_button:
             descriptors["rotatable_bonds"],
         )
 
+    st.subheader("Drug-likeness")
+
+    lipinski = drug_likeness["lipinski"]
+    rules = lipinski["rules"]
+
+    status_col, qed_col, violations_col = st.columns(3)
+
+    status_col.metric(
+        "Lipinski Rule of Five",
+        (
+            "PASS"
+            if lipinski["passes_rule_of_five"]
+            else "FAIL"
+        ),
+    )
+
+    qed_col.metric(
+        "QED",
+        f"{drug_likeness['qed']:.3f}",
+    )
+
+    violations_col.metric(
+        "Lipinski violations",
+        lipinski["violations"],
+    )
+
+    st.markdown("#### Lipinski criteria")
+
+    for name, rule in rules.items():
+        label = (
+            name
+            .replace("_", " ")
+            .title()
+        )
+
+        icon = (
+            "✅"
+            if rule["passes"]
+            else "❌"
+        )
+
+        st.write(
+            f"{icon} **{label}**: "
+            f"{rule['value']:.2f} "
+            f"({rule['threshold']})"
+        )
+
     st.subheader("ML predictions")
 
     solubility = (
         analysis["predictions"]["solubility"]
     )
 
-    col1, col2 = st.columns(2)
+    prediction_col, model_col = st.columns(2)
 
-    col1.metric(
+    prediction_col.metric(
         "Predicted logS",
         f"{solubility['predicted_log_s']:.3f}",
     )
 
-    col2.metric(
+    model_col.metric(
         "Model",
         solubility["model"],
     )
@@ -179,13 +231,13 @@ if analyze_button:
         chemical_space["points"]
     )
 
-    points_df["category"] = points_df[
-        "is_neighbor"
-    ].map(
-        {
-            True: "Nearest neighbour",
-            False: "Compound library",
-        }
+    points_df["category"] = (
+        points_df["is_neighbor"].map(
+            {
+                True: "Nearest neighbour",
+                False: "Compound library",
+            }
+        )
     )
 
     fig = px.scatter(
@@ -208,6 +260,28 @@ if analyze_button:
         title="PCA projection of Morgan fingerprints",
     )
 
+
+    # Make background compounds smaller
+    # and neighbours easier to identify.
+
+    for trace in fig.data:
+        if trace.name == "Compound library":
+            trace.update(
+                marker={
+                    "size": 5,
+                    "opacity": 0.45,
+                }
+            )
+
+        elif trace.name == "Nearest neighbour":
+            trace.update(
+                marker={
+                    "size": 11,
+                    "opacity": 1.0,
+                }
+            )
+
+
     query = chemical_space["query"]
 
     fig.add_trace(
@@ -217,13 +291,15 @@ if analyze_button:
             mode="markers",
             name="Query molecule",
             marker={
-                "size": 16,
+                "size": 22,
                 "symbol": "star",
             },
-            text=[query["smiles"]],
+            text=[
+                query["smiles"]
+            ],
             hovertemplate=(
                 "<b>Query molecule</b><br>"
-                "%{text}"
+                "SMILES: %{text}<br>"
                 "<extra></extra>"
             ),
         )
@@ -238,7 +314,6 @@ if analyze_button:
         use_container_width=True,
     )
 
-
     explained_variance = (
         chemical_space["explained_variance"]
     )
@@ -247,4 +322,10 @@ if analyze_button:
         "PCA explained variance: "
         f"PC1 = {explained_variance[0]:.2%}, "
         f"PC2 = {explained_variance[1]:.2%}"
+    )
+
+    st.caption(
+        "Morgan fingerprints are projected into 2D using PCA. "
+        "Nearest neighbours are selected independently using "
+        "Tanimoto similarity."
     )

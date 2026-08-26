@@ -34,3 +34,9 @@ class ChemicalSpaceInput(BaseModel):
 
 class MoleculeDepictionInput(BaseModel):
     smiles: str = Field(..., min_length=1)
+
+class DrugLikenessInput(BaseModel):
+    smiles: str = Field(
+        ...,
+        min_length=1,
+    )
